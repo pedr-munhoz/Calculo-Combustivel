@@ -16,9 +16,9 @@ export class AppComponent {
       icon: 'home'
     },
     {
-      title: 'List',
-      url: '/list',
-      icon: 'list'
+    title: 'Golf 2017',
+    url: '/golf',
+    icon: 'car'
     }
   ];
 
