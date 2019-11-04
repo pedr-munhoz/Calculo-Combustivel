@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
+import { Storage } from '@ionic/storage';
 
 @Component({
   selector: 'app-golf',
@@ -23,7 +24,7 @@ export class GolfPage implements OnInit {
 
   public abastecimento: {posto: string; km: number, litros: number, nivelTanque: number};
 
-  constructor(public alertcontroller: AlertController) { 
+  constructor(public alertcontroller: AlertController, private storage: Storage) { 
     this.kmRodados = 0;
     this.litrosGastos = 0;
     this.tanqueAtual = 1;
@@ -31,27 +32,43 @@ export class GolfPage implements OnInit {
 
     this.consumoEsperado = 12;
     this.consumoMedio = 0;
-
     this.ultimo = {posto: 'BR', km:0, litros: 40};
+
+    this.storage.get("ultimo").then((value) => {
+      this.ultimo= (value != null) ? value : {posto: 'BR', km:0, litros: 40};
+    });
+    this.storage.get('consumo medio').then((value) => {
+      this.consumoMedio= (value!=null) ? value : 0;
+    });
     
+    
+
+
     this.abastecimento = {posto: '', km: null, litros: null, nivelTanque: null};
-    this.postos.push({
-      nome: 'BR',
-      media: 0,
-      litrosGastos: 0,
-      kmRodados: 0
+    this.storage.get("BR").then( (value) => {
+      //console.log(value);
+        this.postos.push({
+          nome: 'BR',
+          media: (value != null) ? value : 0,
+          litrosGastos: 0,
+          kmRodados: 0
+        });
     });
-    this.postos.push({
-      nome: 'Shell',
-      media: 0,
-      litrosGastos: 0,
-      kmRodados: 0
+    this.storage.get("Shell").then((value)=> {
+      this.postos.push({
+        nome: 'Shell',
+        media:  (value != null) ? value : 0,
+        litrosGastos: 0,
+        kmRodados: 0
+      });
     });
-    this.postos.push({
-      nome: 'Ipiranga',
-      media: 0,
-      litrosGastos: 0,
-      kmRodados: 0
+    this.storage.get("Ipiranga").then((value)=> {
+      this.postos.push({
+        nome: 'Ipiranga',
+        media:  (value != null) ? value : 0,
+        litrosGastos: 0,
+        kmRodados: 0
+      });
     });
   }
 
@@ -59,6 +76,8 @@ export class GolfPage implements OnInit {
     this.kmRodados = kmR;
     this.litrosGastos += (this.tanqueAtual - nT) * this.tamanhoTanque;
     this.consumoMedio = this.kmRodados / this.litrosGastos;
+
+    this.storage.set('consumo medio', this.consumoMedio);
 
     switch (this.ultimo.posto) {
       case 'BR':
@@ -80,12 +99,19 @@ export class GolfPage implements OnInit {
     this.postos[this.aux].litrosGastos += (this.tanqueAtual - nT) * this.tamanhoTanque;
     this.postos[this.aux].media = this.postos[this.aux].kmRodados / this.postos[this.aux].litrosGastos;
     
+    this.storage.set(this.ultimo.posto, this.postos[this.aux].media);
+    
+
     this.tanqueAtual = nT + (litros / this.tamanhoTanque);
     this.ultimo = {
       posto: posto, 
       km: kmR, 
       litros: litros
     };
+    this.storage.set('ultimo', this.ultimo);
+    
+
+
   }
 
   async abasteceBr() {
@@ -109,6 +135,7 @@ export class GolfPage implements OnInit {
         }
       ],
       buttons: ['cancelar','ok']
+     
     })
 
     await alert.present();
