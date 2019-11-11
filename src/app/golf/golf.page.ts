@@ -34,6 +34,8 @@ export class GolfPage implements OnInit {
     this.consumoMedio = 0;
     this.ultimo = {posto: 'BR', km:0, litros: 40};
 
+
+    //consulta na memoria local onde foi o ultimo abastecimento e o consumo medio, se nao encontrar atribui valor pre-definido:
     this.storage.get("ultimo").then((value) => {
       this.ultimo= (value != null) ? value : {posto: 'BR', km:0, litros: 40};
     });
@@ -45,8 +47,9 @@ export class GolfPage implements OnInit {
 
 
     this.abastecimento = {posto: '', km: null, litros: null, nivelTanque: null};
+
+    //consulta na memoria local os valores de consumo medio de cada posto:
     this.storage.get("BR").then( (value) => {
-      //console.log(value);
         this.postos.push({
           nome: 'BR',
           media: (value != null) ? value : 0,
@@ -77,6 +80,7 @@ export class GolfPage implements OnInit {
     this.litrosGastos += (this.tanqueAtual - nT) * this.tamanhoTanque;
     this.consumoMedio = this.kmRodados / this.litrosGastos;
 
+    //armazena na memoria local o valor do consumo medio após o calculo
     this.storage.set('consumo medio', this.consumoMedio);
 
     switch (this.ultimo.posto) {
@@ -99,6 +103,8 @@ export class GolfPage implements OnInit {
     this.postos[this.aux].litrosGastos += (this.tanqueAtual - nT) * this.tamanhoTanque;
     this.postos[this.aux].media = this.postos[this.aux].kmRodados / this.postos[this.aux].litrosGastos;
     
+
+    //armazena na memoria local o a media para ser utilizado quando o aplicativo for aberto
     this.storage.set(this.ultimo.posto, this.postos[this.aux].media);
     
 
@@ -108,6 +114,8 @@ export class GolfPage implements OnInit {
       km: kmR, 
       litros: litros
     };
+
+    //armazena na memoria local o objeto "ultimo" para ser resgatado quando o aplicativo for aberto
     this.storage.set('ultimo', this.ultimo);
     
 
