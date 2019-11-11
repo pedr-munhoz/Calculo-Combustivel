@@ -12,6 +12,7 @@
 <ion-content>
   <!--itens da pagina no formato lista-->
   <ion-list>
+    <!--informações sobre o consumo-->
     <ion-item>
       <label>Consumo médio</label>
       <label slot="end">{{consumoMedio}} km/l</label>
@@ -21,64 +22,27 @@
       <label slot="end">{{consumoEsperado}} km/l</label>
     </ion-item>
     <ion-item-divider></ion-item-divider>
+   
+    <!--informações sobre o ultimo abastecimento-->
     <ion-item>
       <label>Abasetecido por ultimo em {{ultimo.posto}} com {{ultimo.km}}km rodados</label>
     </ion-item>
     <ion-item-divider></ion-item-divider>
+    
+    <!--medias por abastecimento divididas por bandeira-->
     <ion-item>Média por posto</ion-item>
     <ion-item *ngFor="let posto of postos">
       <label>{{posto.nome}}</label>
       <label slot="end">{{posto.media}} km/l</label>
     </ion-item>
     <ion-item-divider></ion-item-divider>
+    
+    <!--seção que lança o alert para recolher as informações sobre um novo abastecimento-->
     <ion-item>Novo abastecimento</ion-item>
     <ion-item>
       <ion-button (click)="abasteceBr()">BR</ion-button>
       <ion-button (click)="abasteceShell()">Shell</ion-button>
       <ion-button (click)="abasteceIpiranga()">Ipiranga</ion-button>
     </ion-item>
-    <!--<ion-item>
-      <label>Posto</label>
-      <ion-select slot="end" [(ngModel)]="abastecimento.posto">
-        <ion-select-option>BR</ion-select-option>
-        <ion-select-option>Shell</ion-select-option>
-        <ion-select-option>Ipiranga</ion-select-option>
-      </ion-select>
-    </ion-item>
-    <ion-item>
-      <label>Nivel do tanque</label>
-      <ion-select slot="end" type = "number" [(ngModel)]="abastecimento.nivelTanque">
-        <ion-select-option>0</ion-select-option>
-        <ion-select-option value=0.5>Meio Tanque</ion-select-option>
-        <ion-select-option>0.25</ion-select-option>
-        <ion-select-option>0.5</ion-select-option>
-        <ion-select-option>0.75</ion-select-option>
-      </ion-select>
-    </ion-item>-->
-    <!--<ion-item>
-      <label>Nivel Tanque</label>
-      <ion-input 
-      slot="end" 
-      type="number"
-      [(ngModel)]="abastecimento.nivelTanque"></ion-input>
-    </ion-item> 
-    <ion-item>
-      <label>KMs rodados</label>
-      <ion-input 
-      slot="end" 
-      type="number"
-      [(ngModel)]="abastecimento.km"></ion-input>
-    </ion-item>
-    <ion-item>
-      <label>Litros</label>
-      <ion-input 
-      slot="end" 
-      type="number"
-      [(ngModel)]="abastecimento.litros">
-    </ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-button (click)="abastecer()" slot="end">Abastecer</ion-button>
-    </ion-item> -->
   </ion-list>
 </ion-content>

@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
+//define os caminhos entre paginas
 const routes: Routes = [
   {
     path: '',

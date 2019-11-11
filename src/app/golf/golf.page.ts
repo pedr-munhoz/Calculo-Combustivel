@@ -9,6 +9,7 @@ import { Storage } from '@ionic/storage';
 })
 export class GolfPage implements OnInit {
 
+  //definição das variaveis locais do carro
   public kmRodados: number;
   public litrosGastos: number;
   public tanqueAtual: number;
@@ -16,14 +17,18 @@ export class GolfPage implements OnInit {
   public consumoEsperado: number;
   public tamanhoTanque: number;
 
+  //variavel utilizada na seleção de
   public aux: number;
   
 
+  //variaveis divididas por posto referentes ao abastecimento 
   public postos: Array<{nome: string; media: number; litrosGastos: number; kmRodados: number}> = [];
   public ultimo: {posto: string; km: number, litros: number};
 
+  //definição do objetivo tipo abastecimento
   public abastecimento: {posto: string; km: number, litros: number, nivelTanque: number};
 
+  //construtor, inicia as variaveis a cada novo carregamento
   constructor(public alertcontroller: AlertController, private storage: Storage) { 
     this.kmRodados = 0;
     this.litrosGastos = 0;
@@ -32,6 +37,7 @@ export class GolfPage implements OnInit {
 
     this.consumoEsperado = 12;
     this.consumoMedio = 0;
+    //nessa demonstração, o programa se inicia com o tanque cheio e abastecido num posto BR
     this.ultimo = {posto: 'BR', km:0, litros: 40};
 
 
@@ -75,6 +81,7 @@ export class GolfPage implements OnInit {
     });
   }
 
+  //função que inclui novo abastecimento e atualiza as variaveis de consumo adequadamente
   public abastecer(posto, kmR, nT, litros): void {
     this.kmRodados = kmR;
     this.litrosGastos += (this.tanqueAtual - nT) * this.tamanhoTanque;
@@ -83,6 +90,7 @@ export class GolfPage implements OnInit {
     //armazena na memoria local o valor do consumo medio após o calculo
     this.storage.set('consumo medio', this.consumoMedio);
 
+    //define em qual posto carregar as informações, sempre baseado no ultimo abastecimento
     switch (this.ultimo.posto) {
       case 'BR':
         this.aux = 0;
@@ -99,6 +107,7 @@ export class GolfPage implements OnInit {
       default:
         break;
     }    
+    //atualiza as metricas do posto 
     this.postos[this.aux].kmRodados += kmR - this.ultimo.km;
     this.postos[this.aux].litrosGastos += (this.tanqueAtual - nT) * this.tamanhoTanque;
     this.postos[this.aux].media = this.postos[this.aux].kmRodados / this.postos[this.aux].litrosGastos;
@@ -108,6 +117,7 @@ export class GolfPage implements OnInit {
     this.storage.set(this.ultimo.posto, this.postos[this.aux].media);
     
 
+    //atualiza o volume do tanque pós atualização
     this.tanqueAtual = nT + (litros / this.tamanhoTanque);
     this.ultimo = {
       posto: posto, 
@@ -117,11 +127,9 @@ export class GolfPage implements OnInit {
 
     //armazena na memoria local o objeto "ultimo" para ser resgatado quando o aplicativo for aberto
     this.storage.set('ultimo', this.ultimo);
-    
-
-
   }
 
+  //função chamada pelo botao de abastecimento num posto BR
   async abasteceBr() {
     const alert = await this.alertcontroller.create({
       header: 'BR',
@@ -149,9 +157,12 @@ export class GolfPage implements OnInit {
     await alert.present();
     let result = await alert.onDidDismiss();
 
+    //encaminha os dados para a função geral 
     this.abastecer('BR', result.data.values.km, result.data.values.nT/100, result.data.values.l);
   }
 
+  
+  //função chamada pelo botao de abastecimento num posto Shell
   async abasteceShell() {
     const alert = await this.alertcontroller.create({
       header: 'Shell',
@@ -178,9 +189,12 @@ export class GolfPage implements OnInit {
     await alert.present();
     let result = await alert.onDidDismiss();
 
+    //encaminha os dados para a função geral 
     this.abastecer('Shell', result.data.values.km, result.data.values.nT/100, result.data.values.l);
   }
 
+  
+  //função chamada pelo botao de abastecimento num posto Ipiranga
   async abasteceIpiranga() {
     const alert = await this.alertcontroller.create({
       header: 'Ipiranga',
@@ -207,6 +221,7 @@ export class GolfPage implements OnInit {
     await alert.present();
     let result = await alert.onDidDismiss();
 
+    //encaminha os dados para a função geral 
     this.abastecer('Ipiranga', result.data.values.km, result.data.values.nT/100, result.data.values.l);
   }
 
